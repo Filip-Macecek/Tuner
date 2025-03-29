@@ -63,4 +63,13 @@ class AppCanvas
         
         this.ctx.stroke();
     }
+
+    drawText(text)
+    {
+        this.ctx.font = "16px Arial";
+        this.ctx.fillStyle = "black";
+        this.ctx.textAlign = "left";
+        this.ctx.textBaseline = "top";
+        this.ctx.fillText(text, 10, 10);
+    }
 }

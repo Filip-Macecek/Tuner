@@ -15,13 +15,20 @@ class App
     {
         // TODO: Actual audio
         this.audio.captureNext();
-        this.appCanvas.clear();
+
         let processing = new Processing(this.audio.getSamplingRate(), [30, 440]);
+        let start = Date.now();
+        let detectedPitch = processing.getEstimatedFrequency(this.audio.audioBuffer)
+        let pitchDetectionDurationMs = (Date.now() - start);
+
+        this.appCanvas.clear();
         this.appCanvas.drawAmplitude(processing.getPeakDecibels(this.audio.audioBuffer), "RED");
         this.appCanvas.drawAmplitude(processing.getRmsDecibels(this.audio.audioBuffer), "GREEN");
         this.appCanvas.drawAudio(this.audio.audioBuffer);
-        this.appCanvas.drawFrequency(processing.getEstimatedFrequency(this.audio.audioBuffer));
+        this.appCanvas.drawFrequency(detectedPitch);
+        this.appCanvas.drawText(`Pitch detection duration (ms): ${pitchDetectionDurationMs};`);
 
+        // This part contains creation of custom signal for algorithm testing.
         // const sampleRate = 4096; // Standard audio sample rate
         // const frequency = 50; // Frequency of the sine wave in Hz
         // const amplitude = 1; // Amplitude of the sine wave

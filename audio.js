@@ -4,6 +4,13 @@ class AppAudio {
         this.started = false;
         this.audioBuffer = new Float32Array(AUDIO_BUFFER_SIZE);
         this.tauMax = 1760; // A6
+        this.audioContext = null;
+    }
+
+    getSamplingRate()
+    {
+        Guard.failIf(this.started === false, "Audio not initialized.");
+        return this.audioContext.sampleRate;
     }
 
     async startAsync()
@@ -11,17 +18,17 @@ class AppAudio {
         // try {
             // Request access to the microphone
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const source = audioContext.createMediaStreamSource(stream);
-            this.analyser = audioContext.createAnalyser();
+            this.audioContext = new (window.AudioContext || window.webkit.audioContext)();
+            const source = this.audioContext.createMediaStreamSource(stream);
+            this.analyser = this.audioContext.createAnalyser();
     
             // Configure the analyser
             this.analyser.fftSize = AUDIO_BUFFER_SIZE;  // Buffer size (adjustable)
             
             // Connect the microphone input to the analyser
             source.connect(this.analyser);
-            console.log(`audio: sampleRate: ${audioContext.sampleRate} Hz`);
-            console.log(`audio: buffer timespan: ${(AUDIO_BUFFER_SIZE/audioContext.sampleRate)/1000} ms`);
+            console.log(`audio: sampleRate: ${this.audioContext.sampleRate} Hz`);
+            console.log(`audio: buffer timespan: ${(AUDIO_BUFFER_SIZE/this.audioContext.sampleRate)/1000} ms`);
             
             this.started = true;
             

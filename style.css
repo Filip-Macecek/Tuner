@@ -1,0 +1,50 @@
+body {
+    background-color: #0d0d0d;
+}
+
+@media (max-width: 768px) {
+    #container {
+        width: 100%;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+    #container {
+        width: 80;
+    }
+}
+
+@media (min-width: 1201px) {
+    #container {
+        width: 60%;
+    }
+}
+
+#tuner {
+    display: flex;
+    width: 600px;
+    height: 500px;
+}
+
+.margin_auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#amplitude_meter {
+    /* display: flex;
+    flex-direction: row; */
+    width: 20%;
+    height: 100%;
+}
+
+#pitch_meter {
+    /* display: flex;
+    flex-direction: row; */
+    width: 80%;
+    height: 100%;
+}
+
+/* div {
+    border: 2px white solid;
+} */

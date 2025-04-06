@@ -5,6 +5,7 @@ class Processing
         this.samplingRate = samplingRate;
         this.lagBounds = [Math.round(this.samplingRate / frequencyBounds[1]), Math.round(this.samplingRate / frequencyBounds[0])]
         this.dfCache = {};
+        this.cmndCache = {};
     }
 
     getPeak(audioBuffer)
@@ -78,23 +79,60 @@ class Processing
         return this.samplingRate / lag;
     }
 
-    // TODO: If this starts returning wrong frequency, one possible reason is that the multiples of the lagCandidate returns lower df ... it could be fixed by specifying threshold, or research more.
-    getEstimatedFrequency(audioBuffer)
+    frequencyToLag(f)
     {
-        let prevRes = Number.MAX_VALUE;   
+        Guard.failIf(f < 1, `Invalid frequency ${f}.`);
+        return f / this.samplingRate;
+    }
+
+    // TODO: If this starts returning wrong frequency, one possible reason is that the multiples of the lagCandidate returns lower df ... it could be fixed by specifying threshold, or research more.
+    getEstimatedFrequency(audioBuffer, previousPitch, tolerance)
+    {
+        let minRes = Number.MAX_VALUE;   
         let lagCandidate = this.lagBounds[0];
         let acfResults = []
+        let results = []
 
         for (let lag = this.lagBounds[0]; lag <= this.lagBounds[1]; lag++) {
-            let df = this.cummulativeMeanNormalizedDifferenceFunction(audioBuffer, lag);
-            if (df < prevRes)
+            let cmnd = this.cummulativeMeanNormalizedDifferenceFunction(audioBuffer, lag);
+            this.cmndCache[lag] = cmnd;
+            results.push(cmnd);
+            if (cmnd < minRes)
             {
-                prevRes = df;
+                minRes = cmnd;
                 lagCandidate = lag;
             }
-            acfResults.push(`lag: ${lag} = ${df}`);
+            acfResults.push(`lag: ${lag} = ${cmnd}`);
         }
 
-        return this.lagToFrequency(lagCandidate);
+        let confidence = 1 - (minRes / (results.reduce((prev, curr, _) => prev + curr, 0) / results.length));
+        confidence = Math.max(0, Math.min(1, confidence));
+
+        let estimatedFrequency = this.lagToFrequency(lagCandidate);
+        let harmonic = previousPitch == null ? 1 : [0.25, 0.5, 1, 2].reduce((prev, multiple, _) => {
+            let offset = Math.abs(previousPitch - estimatedFrequency * multiple)
+            if (offset <= tolerance)
+            {
+                const lag = this.frequencyToLag(estimatedFrequency * multiple);
+                const res = this.cmndCache[lag];
+
+                if (Math.abs(res - minRes) < 0.2)
+                {
+                    return multiple;
+                }
+                else {
+                    return prev;
+                }
+            }
+            else 
+            {
+                return prev;
+            }
+        }, 1);
+
+        return {
+            estimatedFrequency: estimatedFrequency * harmonic,
+            confidence: confidence
+        }
     }
 }

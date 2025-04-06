@@ -6,6 +6,12 @@ class AppCanvas
         this.ctx = this.canvasEl.getContext("2d");
         this.width = this.canvasEl.width;
         this.height = this.canvasEl.height;
+        
+        this.cmndsCanvasEl = document.getElementById('canvasCmnds');
+        this.cmndsCtx = this.cmndsCanvasEl.getContext("2d");
+        this.cmndsWidth = this.cmndsCanvasEl.width;
+        this.cmndsHeight = this.cmndsCanvasEl.height;
+        this.cmndsIndex = 0;
     }
 
     clear()
@@ -31,7 +37,7 @@ class AppCanvas
     drawFrequency(f)
     {
         this.ctx.font = "48px Arial";
-        this.ctx.fillStyle = "black";
+        this.ctx.fillStyle = "white";
         this.ctx.textAlign = "center";
         this.ctx.textBaseline = "middle";
         this.ctx.fillText(`${f} Hz`, this.width / 2, this.height / 2);
@@ -67,9 +73,43 @@ class AppCanvas
     drawText(text)
     {
         this.ctx.font = "16px Arial";
-        this.ctx.fillStyle = "black";
+        this.ctx.fillStyle = "white";
         this.ctx.textAlign = "left";
         this.ctx.textBaseline = "top";
         this.ctx.fillText(text, 10, 10);
+    }
+
+    cmndsReset()
+    {
+        this.cmndsIndex = 0;
+        this.cmndsCtx.clearRect(0, 0, this.width, this.height); // Clear canvas
+    }
+
+    plotCmnds(cmnds, totalFrames)
+    {
+        let cmndCache = cmnds;
+        let i = this.cmndsIndex;
+        const keys = Object.keys(cmndCache).map(Number).sort((a, b) => a - b);
+        const maxKey = Math.max(...keys);
+        const maxValue = Math.max(...Object.values(cmndCache));
+
+        this.cmndsCtx.beginPath();
+        const alpha = (i / totalFrames) * 255;
+        this.cmndsCtx.strokeStyle = `rgb(255, ${alpha}, 255)`;
+        this.cmndsCtx.lineWidth = 2;
+
+        keys.forEach((key, index) => {
+            const x = (key / maxKey) * this.cmndsWidth;
+            const y = this.cmndsHeight - (cmndCache[key] / maxValue) * this.cmndsHeight;
+
+            if (index === 0) {
+                this.cmndsCtx.moveTo(x, y);
+            } else {
+                this.cmndsCtx.lineTo(x, y);
+            }
+        });
+        
+        this.cmndsCtx.stroke();
+        this.cmndsIndex++;
     }
 }

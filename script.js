@@ -6,6 +6,7 @@ class App
         this.appCanvas = new AppCanvas();
         this.amplitudeMeter = new AmplitudeMeter();
         this.pitchMeter = new PitchMeter();
+        this.pitchMeter2 = new PitchMeter2();
         this.frameCounter = 0;
         this.totalFrames = 60;
         this.detectedPitches = [];
@@ -19,6 +20,7 @@ class App
         await this.audio.startAsync();
         this.amplitudeMeter.initialize();
         this.pitchMeter.initialize();
+        this.pitchMeter2.initialize();
     }
 
     loop()
@@ -61,7 +63,7 @@ class App
         requestAnimationFrame(this.loop.bind(this));
     }
 
-    draw(rms, cents, closestTone, detectedPitch, smoothedPitch, cmndCache, confidence)
+    draw(rms, cents, closestTone, detectedPitch, smoothedPitch, cmndCache, confidence, stringNumber)
     {
 
         if (this.frameCounter > this.totalFrames)
@@ -71,9 +73,10 @@ class App
         }
 
         this.amplitudeMeter.drawAmplitude(rms);
-        console.log(`cents calculation: result: ${cents}, detectedPitch: ${detectedPitch}, smoothedPitch: ${smoothedPitch}, closestToneFrequency: ${closestTone.toneFrequency}, confidence: ${confidence}}`);
+        // console.log(`cents calculation: result: ${cents}, detectedPitch: ${detectedPitch}, smoothedPitch: ${smoothedPitch}, closestToneFrequency: ${closestTone.toneFrequency}, confidence: ${confidence}}`);
         this.pitchMeter.drawPitchOffset(cents);
         this.pitchMeter.drawReferenceTone(closestTone);
+        this.pitchMeter2.update(cents, `${closestTone.tone}${closestTone.octave}`, 1); // todo string number;
 
         this.appCanvas.clear();
         this.appCanvas.drawAudio(this.audio.audioBuffer);
@@ -97,6 +100,24 @@ class App
     }
 }
 
-let app = new App();
-let initPromise = app.initAsync();
-initPromise.then(() => app.loop());
+if (document.readyState === 'complete') {
+    // Page is already loaded, execute immediately
+    initializeApp();
+} else {
+    // Wait for the load event
+    window.addEventListener('load', initializeApp);
+}
+
+function initializeApp() {
+    let app = new App();
+    let initPromise = app.initAsync();
+    initPromise.then(() => {
+        app.loop();
+    });
+
+    // document.addEventListener('visibilitychange', () => {
+    //     if (isInitialized && document.visibilityState === 'visible') {
+    //         app.loop();
+    //     }
+    // });
+}

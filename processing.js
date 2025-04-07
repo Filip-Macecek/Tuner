@@ -116,7 +116,7 @@ class Processing
                 const lag = this.frequencyToLag(estimatedFrequency * multiple);
                 const res = this.cmndCache[lag];
 
-                if (Math.abs(res - minRes) < 0.2)
+                if (Math.abs(res - minRes) < 0.5)
                 {
                     return multiple;
                 }

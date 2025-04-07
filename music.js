@@ -6,6 +6,8 @@ class Music
 
     static TONE_NAMES = ["A", "A#/Bb", "B", "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A"];
 
+    static TONENAME_TO_STRING = { "E1" : 1, "A1" : 2, "D2" : 3, "G2" : 4, "B2" : 5, "E3" : 6 };
+
     static getClosestTone(frequency)
     {
         if (!frequency || frequency < Music.A_OCTAVES[0])
@@ -50,6 +52,17 @@ class Music
         };
     }
 
+    static getStringNumber(toneName)
+    {
+        if (Music.TONENAME_TO_STRING[toneName])
+        {
+            return Music.TONENAME_TO_STRING[toneName];
+        }
+        else
+        {
+            return 0; // TODO
+        }
+    }
 
     static getCentsDistance(tone, refTone)
     {

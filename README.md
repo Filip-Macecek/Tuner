@@ -1,2 +1,2 @@
 # Tuner
-Guitar Tuner written in plain JS with no dependencies.
+Guitar tuner written in plain JS with no dependencies.

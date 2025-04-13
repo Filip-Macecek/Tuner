@@ -76,7 +76,7 @@ class App
 
         this.appCanvas.clear();
         this.appCanvas.drawAudio(this.audio.audioBuffer);
-        this.appCanvas.drawFrequency(detectedPitch);
+        this.appCanvas.drawFrequency(smoothedPitch);
         this.appCanvas.plotCmnds(cmndCache, this.totalFrames);
 
         this.frameCounter++;
@@ -111,9 +111,9 @@ function initializeApp() {
         app.loop();
     });
 
-    // document.addEventListener('visibilitychange', () => {
-    //     if (isInitialized && document.visibilityState === 'visible') {
-    //         app.loop();
-    //     }
-    // });
+    document.addEventListener('visibilitychange', () => {
+         if (isInitialized && document.visibilityState === 'visible') {
+             app.loop();
+         }
+    });
 }

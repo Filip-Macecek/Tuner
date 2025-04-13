@@ -31,7 +31,8 @@ class PitchMeter2
         this.canvas.height = this.canvasBoundsBBox.height * this.scale;
         const canvasY = (this.canvasBoundsBBox.y * this.scale + this.svgBRect.y + window.scrollY);
         this.canvas.style.top = `${canvasY}px`;
-        this.canvas.style.left = `${(this.canvasBoundsBBox.x * this.scale + this.svgBRect.x)}px`;
+        this.canvas.style.left = `${(this.canvasBoundsBBox.x * this.scale + this.svgBRect.x + window.scrollX)}px`;
+        this.ctx = this.canvas.getContext("2d");
 
         this.centText = document.getElementById("centsOffset").querySelector("tspan");
         this.stringNumberText = document.getElementById("stringNumber").querySelector("tspan");
@@ -41,31 +42,10 @@ class PitchMeter2
 
     update(cents, tone, stringNumber)
     {
+        this.drawHistory();
+
         let normalizedCents = (cents + 50) / 100;
-        let needleOffset = this.pitchScaleWidth * normalizedCents;
-
-        this.needleEl.style.transform = `translate(${needleOffset}px, 0px)`;
-
-        let needleRect = this.needleEl.getBoundingClientRect();
-        let canvasRect = this.canvas.getBoundingClientRect();
-        let canvasBoundsRect = this.canvasBoundsEl.getBoundingClientRect();
-        let historyWidth = canvasBoundsRect.width;
-        let historyHeight = canvasBoundsRect.height;
-        let historyPointsOffset = historyHeight / this.historyBufferSize;
-        
-        let ctx = this.canvas.getContext("2d");
-        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        for (let i = 0; i < this.historyBuffer.length; i++)
-        {
-            let x = canvasBoundsRect.left - canvasRect.left + (historyWidth * this.historyBuffer[i]);
-            let j = this.historyBuffer.length - (i + 1);
-            let y = needleRect.top + needleRect.height / 2 - canvasRect.top + historyPointsOffset * j;
-            let alpha = historyHeight / y;
-            ctx.beginPath();
-            ctx.arc(x, y, 10, 0, 6 * Math.PI);
-            ctx.fillStyle = `rgba(255, 255, 255, 1)`;
-            ctx.fill();   
-        }
+        this.moveNeedle(normalizedCents);
 
         const roundedCents = Math.round(cents);
         this.centText.textContent = roundedCents > 0 ? `+${roundedCents}` : roundedCents;
@@ -78,8 +58,58 @@ class PitchMeter2
         {
             this.historyBuffer.shift();
         }
+    }
 
-        // ctx.fillStyle = "white";
-        // ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    drawHistory()
+    {
+        let canvasRect = this.canvas.getBoundingClientRect();
+        
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        let points = []
+        for (let i = this.historyBuffer.length - 1; i >= 0; i--)
+        {
+            let x = canvasRect.width * this.historyBuffer[i];
+            let y = canvasRect.height / this.historyBufferSize * (this.historyBuffer.length - i);
+            points.push([x, y]);
+        }
+
+        const pointWidth = 4;
+        const notTunedColor = 0xFFFFFF;
+        const tunedColor = 0x87b37a;
+        for (let i = 0; i < points.length - 1; i++)
+        {
+            let x = points[i][0];
+            let y = points[i][1];
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, pointWidth, 0, 2 * Math.PI);
+            let alpha = 1 - (y / canvasRect.height) ** 4;
+            let colorProgression = Math.max(0, 1 - 2 * Math.abs((x / canvasRect.width) - 0.5) ** 0.68);
+            let color = this.getColor(notTunedColor, tunedColor, colorProgression);
+            this.ctx.fillStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
+            this.ctx.fill();
+        }
+    }
+
+    getColor(base, target, k)
+    {
+        const baseRed = (base & 0xFF0000) >> 16;
+        const baseGreen = (base & 0x00FF00) >> 8;
+        const baseBlue = (base & 0x0000FF);
+
+        const targetRed = (target & 0xFF0000) >> 16;
+        const targetGreen = (target & 0x00FF00) >> 8;
+        const targetBlue = (target & 0x0000FF);
+
+        const diffRed = targetRed - baseRed;
+        const diffGreen = targetGreen - baseGreen;
+        const diffBlue = targetBlue - baseBlue;
+
+        return [baseRed + diffRed * k, baseGreen + diffGreen * k, baseBlue + diffBlue * k];
+    }
+
+    moveNeedle(normalizedCents)
+    {
+        let needleOffset = this.pitchScaleWidth * normalizedCents;
+        this.needleEl.style.transform = `translate(${needleOffset}px, 0px)`;
     }
 }

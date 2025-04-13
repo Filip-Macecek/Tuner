@@ -5,7 +5,6 @@ class App
         this.audio = new AppAudio();
         this.appCanvas = new AppCanvas();
         this.amplitudeMeter = new AmplitudeMeter();
-        this.pitchMeter = new PitchMeter();
         this.pitchMeter2 = new PitchMeter2();
         this.frameCounter = 0;
         this.totalFrames = 60;
@@ -19,7 +18,6 @@ class App
     {
         await this.audio.startAsync();
         this.amplitudeMeter.initialize();
-        this.pitchMeter.initialize();
         this.pitchMeter2.initialize();
     }
 
@@ -53,12 +51,12 @@ class App
         this.previoiusPitch = smoothedPitch;
 
         this.amplitudeMeter.clear();
-        this.pitchMeter.clear();
 
         const peak = processing.getPeakDecibels(this.audio.audioBuffer);
         const rms = processing.getRmsDecibels(this.audio.audioBuffer);
+        const stringNumber = Music.getStringNumber(closestTone);
 
-        this.draw(rms, cents, closestTone, detectedPitch, smoothedPitch, processing.cmndCache, estimation.confidence);
+        this.draw(rms, cents, closestTone, detectedPitch, smoothedPitch, processing.cmndCache, estimation.confidence, stringNumber);
 
         requestAnimationFrame(this.loop.bind(this));
     }
@@ -74,9 +72,7 @@ class App
 
         this.amplitudeMeter.drawAmplitude(rms);
         // console.log(`cents calculation: result: ${cents}, detectedPitch: ${detectedPitch}, smoothedPitch: ${smoothedPitch}, closestToneFrequency: ${closestTone.toneFrequency}, confidence: ${confidence}}`);
-        this.pitchMeter.drawPitchOffset(cents);
-        this.pitchMeter.drawReferenceTone(closestTone);
-        this.pitchMeter2.update(cents, `${closestTone.tone}${closestTone.octave}`, 1); // todo string number;
+        this.pitchMeter2.update(cents, closestTone, stringNumber);
 
         this.appCanvas.clear();
         this.appCanvas.drawAudio(this.audio.audioBuffer);

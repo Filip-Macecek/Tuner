@@ -4,9 +4,23 @@ class Music
 
     static A_OCTAVES = [13.75, 27.5, 55, 110, 220, 440, 880, 1760, 3520, 7040];
 
-    static TONE_NAMES = ["A", "A#/Bb", "B", "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A"];
+    static TONES = [
+        { name: "A", isSharp: false, baseTone: "A" },
+        { name: "A#/Bb", isSharp: true, baseTone: "A" },
+        { name: "B", isSharp: false, baseTone: "B" },
+        { name: "C", isSharp: false, baseTone: "C" },
+        { name: "C#/Db", isSharp: true, baseTone: "C" },
+        { name: "D", isSharp: false, baseTone: "D" },
+        { name: "D#/Eb", isSharp: true, baseTone: "D" },
+        { name: "E", isSharp: false, baseTone: "E" },
+        { name: "F", isSharp: false, baseTone: "F" },
+        { name: "F#/Gb", isSharp: true, baseTone: "F" },
+        { name: "G", isSharp: false, baseTone: "G" },
+        { name: "G#/Ab", isSharp: true, baseTone: "G" },
+        { name: "A", isSharp: false, baseTone: "A" }
+    ];
 
-    static TONENAME_TO_STRING = { "E1" : 1, "A1" : 2, "D2" : 3, "G2" : 4, "B2" : 5, "E3" : 6 };
+    static TONEANDOCTAVE_TO_STRINGNUMBER = { "E1" : 1, "A1" : 2, "D2" : 3, "G2" : 4, "B2" : 5, "E3" : 6 };
 
     static getClosestTone(frequency)
     {
@@ -46,17 +60,18 @@ class Music
         }
 
         return {
-            tone: Music.TONE_NAMES[semitoneOffset],
+            tone: Music.TONES[semitoneOffset],
             octave: 1,
             toneFrequency: closestToneFrequency
         };
     }
 
-    static getStringNumber(toneName)
+    static getStringNumber(tone)
     {
-        if (Music.TONENAME_TO_STRING[toneName])
+        const stringNumber = Music.TONEANDOCTAVE_TO_STRINGNUMBER[`${tone.name}${tone.octave}`];
+        if (stringNumber)
         {
-            return Music.TONENAME_TO_STRING[toneName];
+            return stringNumber;
         }
         else
         {

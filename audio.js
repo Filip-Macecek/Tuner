@@ -17,7 +17,9 @@ class AppAudio {
     {
         // try {
             // Request access to the microphone
+            console.log("I AM HERE");
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            console.log("GOT THE PERMISSIONS.")
             this.audioContext = new (window.AudioContext || window.webkit.audioContext)();
             const source = this.audioContext.createMediaStreamSource(stream);
             this.analyser = this.audioContext.createAnalyser();

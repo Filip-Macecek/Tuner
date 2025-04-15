@@ -2,67 +2,39 @@ class App
 {
     constructor()
     {
-        this.audio = new AppAudio();
         this.appCanvas = new AppCanvas();
         this.amplitudeMeter = new AmplitudeMeter();
         this.pitchMeter2 = new PitchMeter2();
         this.frameCounter = 0;
         this.totalFrames = 60;
-        this.detectedPitches = [];
-        this.detectedPitchesBufferSize = 120;
-        this.prevTone = null;
-        this.previousPitch = null;
+        this.processor = null;
+        this.latestData = null;
     }
 
     async initAsync()
     {
-        await this.audio.startAsync();
         this.amplitudeMeter.initialize();
         this.pitchMeter2.initialize();
+        this.processor = new Worker("processorWebWorker.js");
+        this.processor.onmessage = (e) => {
+            this.latestData = e.data;
+        };
     }
 
     loop()
     {
-        this.audio.captureNext();
-
-        let processing = new Processing(this.audio.getSamplingRate(), [30, 440]);
-        let estimation = processing.getEstimatedFrequency(this.audio.audioBuffer, this.previousPitch, 2);
-        let detectedPitch = estimation.estimatedFrequency;
-
-        if (estimation.confidence > 0.8)
+        if (this.latestData !== null) // TODO 
         {
-            this.detectedPitches.push(detectedPitch);
+            let rms, cents, closestTone, detectedPitch, smoothedPitch, cmndCache, confidence, stringNumber = this.latestData;
+            this.draw(rms, cents, closestTone, detectedPitch, smoothedPitch, cmndCache, confidence, stringNumber);
         }
-
-        if (this.detectedPitches.length > this.detectedPitchesBufferSize)
-        {
-            this.detectedPitches.shift();
-        }
-        let smoothedPitch = this.detectedPitches.length >= 1 ? this.smoothOut(this.detectedPitches) : 25;
-        const closestTone = Music.getClosestTone(smoothedPitch);
-        const cents = closestTone ? Music.getCentsDistance(smoothedPitch, closestTone.toneFrequency) : -50;
-
-        if (this.prevTone != closestTone.tone)
-        {
-            this.detectedPitches = [];
-            this.previousPitch = null;
-        }
-        this.prevTone = closestTone.tone;
-        this.previoiusPitch = smoothedPitch;
-
-        this.amplitudeMeter.clear();
-
-        const peak = processing.getPeakDecibels(this.audio.audioBuffer);
-        const rms = processing.getRmsDecibels(this.audio.audioBuffer);
-        const stringNumber = Music.getStringNumber(closestTone);
-
-        this.draw(rms, cents, closestTone, detectedPitch, smoothedPitch, processing.cmndCache, estimation.confidence, stringNumber);
 
         requestAnimationFrame(this.loop.bind(this));
     }
 
     draw(rms, cents, closestTone, detectedPitch, smoothedPitch, cmndCache, confidence, stringNumber)
     {
+        amplitudeMeter.clear();
 
         if (this.frameCounter > this.totalFrames)
         {
@@ -111,9 +83,9 @@ function initializeApp() {
         app.loop();
     });
 
-    document.addEventListener('visibilitychange', () => {
-         if (isInitialized && document.visibilityState === 'visible') {
-             app.loop();
-         }
-    });
+    // document.addEventListener('visibilitychange', () => {
+    //      if (isInitialized && document.visibilityState === 'visible') {
+    //          app.loop();
+    //      }
+    // });
 }

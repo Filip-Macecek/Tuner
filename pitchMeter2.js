@@ -50,7 +50,7 @@ class PitchMeter2
         const roundedCents = Math.round(cents);
         this.centText.textContent = roundedCents > 0 ? `+${roundedCents}` : roundedCents;
         this.stringNumberText.textContent = stringNumber ? stringNumber : '-';
-        this.toneNameText.textContent = `${tone.tone.baseTone}${tone.octave}`;
+        this.toneNameText.textContent = tone ? `${tone.tone.baseTone}${tone.octave}` : '-';
         this.sharpIcon.style.fill = tone.tone.isSharp ? WHITE : BACKGROUND_COLOR;
 
         this.historyBuffer.push(normalizedCents);

@@ -1,3 +1,5 @@
+
+
 class Guard {
     static failIf(boolExpression, message)
     {

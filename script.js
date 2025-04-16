@@ -12,6 +12,8 @@ class App
         this.detectedPitchesBufferSize = 120;
         this.prevTone = null;
         this.previousPitch = null;
+
+        this.lastFrame = new Date();
     }
 
     async initAsync()
@@ -25,8 +27,11 @@ class App
     {
         this.audio.captureNext();
 
+        let zeroCount = this.audio.audioBuffer.reduce((count, sample) => count + (sample === 0 ? 1 : 0), 0);
+        console.log(`Number of zeroes in audio buffer: ${zeroCount}`);
+
         let processing = new Processing(this.audio.getSamplingRate(), [30, 440]);
-        let estimation = processing.getEstimatedFrequency(this.audio.audioBuffer, this.previousPitch, 2);
+        let estimation = { estimatedFrequency: 440, confidence: 0.9 };
         let detectedPitch = estimation.estimatedFrequency;
 
         if (estimation.confidence > 0.8)
@@ -57,6 +62,11 @@ class App
         const stringNumber = Music.getStringNumber(closestTone);
 
         this.draw(rms, cents, closestTone, detectedPitch, smoothedPitch, processing.cmndCache, estimation.confidence, stringNumber);
+
+        const now = new Date();
+        const fps = 1000 / (now - this.lastFrame);
+        // console.log(fps);
+        this.lastFrame = now;
 
         requestAnimationFrame(this.loop.bind(this));
     }

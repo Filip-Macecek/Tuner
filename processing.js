@@ -47,7 +47,7 @@ class Processing
     differenceFunction(audioBuffer, lag)
     {
         let cachedDfValue = this.dfCache[lag];
-        if (cachedDfValue)
+        if (cachedDfValue != null)
         {
             return this.dfCache[lag];
         }
@@ -70,7 +70,14 @@ class Processing
             sum += this.differenceFunction(audioBuffer, j);
         }
 
-        return lag * df / sum;
+        if (sum !== 0)
+        {
+            return lag * df / sum;
+        }
+        else 
+        {
+            return lag * df / 10e-12;
+        }
     }
     
     lagToFrequency(lag)

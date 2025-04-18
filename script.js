@@ -26,30 +26,31 @@ class App
         {
             let closestTone = Music.getClosestTone(pitch);
             let cents = Music.getCentsDistance(pitch, closestTone.toneFrequency)
-            this.draw(1, cents, closestTone, null, pitch, null, 0.9, null);
+            this.draw(1, cents, closestTone, pitch, pitch, this.audio.audioBuffer, this.audio.cmndCache, 0.9, null);
         }
 
         requestAnimationFrame(this.loop.bind(this));
     }
 
-    draw(rms, cents, closestTone, detectedPitch, smoothedPitch, cmndCache, confidence, stringNumber)
+    draw(rms, cents, closestTone, detectedPitch, smoothedPitch, buffer, cmndCache, confidence, stringNumber)
     {
         // this.amplitudeMeter.clear();
 
-        // if (this.frameCounter > this.totalFrames)
-        // {
-        //     this.frameCounter = 0;
-        //     this.appCanvas.cmndsReset();
-        // }
+        if (this.frameCounter > this.totalFrames)
+        {
+            this.frameCounter = 0;
+            this.appCanvas.cmndsReset();
+        }
 
         // this.amplitudeMeter.drawAmplitude(rms);
         // console.log(`cents calculation: result: ${cents}, detectedPitch: ${detectedPitch}, smoothedPitch: ${smoothedPitch}, closestToneFrequency: ${closestTone.toneFrequency}, confidence: ${confidence}}`);
         this.pitchMeter2.update(cents, closestTone, stringNumber);
 
-        // this.appCanvas.clear();
-        // this.appCanvas.drawAudio(this.audio.audioBuffer);
-        // this.appCanvas.drawFrequency(smoothedPitch);
-        // this.appCanvas.plotCmnds(cmndCache, this.totalFrames);
+        this.appCanvas.clear();
+        if (buffer) this.appCanvas.drawAudio(buffer);
+        if (buffer) this.appCanvas.drawAudio2(this.audio.audioBuffer2);
+        if (smoothedPitch) this.appCanvas.drawFrequency(smoothedPitch);
+        if (cmndCache) this.appCanvas.plotCmnds(cmndCache, this.totalFrames);
 
         this.frameCounter++;
     }

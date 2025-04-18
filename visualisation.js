@@ -69,6 +69,33 @@ class AppCanvas
         
         this.ctx.stroke();
     }
+    
+    drawAudio2(audioBuffer)
+    {
+        const bufferLength = audioBuffer.length;
+        const sliceWidth = this.width / bufferLength;
+
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = "pink";
+        this.ctx.lineWidth = 2;
+
+        let x = 0;
+        for (let i = 0; i < bufferLength; i++) {
+            const v = -audioBuffer[i] * 0.5 + 0.5; // Normalize to [0, 1]
+            const y = v * this.height;
+
+            if (i === 0) {
+                this.ctx.moveTo(x, y);
+            } else {
+                // TODO: this draws it inverted.
+                this.ctx.lineTo(x, y);
+            }
+
+            x += sliceWidth;
+        }
+        
+        this.ctx.stroke();
+    }
 
     drawText(text)
     {

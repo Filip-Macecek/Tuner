@@ -8,15 +8,18 @@ class TunerAudioProcessor extends AudioWorkletProcessor
         // 110 Hz == lag 436, 440 Hz = lag 109 .. if sample rate is 48kHz.. maybe this could be tweaked somehow based on the string being played. 
         // if for example low string is being played, the buffer needs to be much higher. But if a high string is being played, only a very small buffer should be sufficient.
         // i wonder what is the perfect number of steps through buffer are necessary for the computation to be accurate?
-        this.bufferSize = 2048;
+        // TODO: Figure out how to dynamically adjust the size.
+        // TODO: Confirm the theory that lower buffersize means less accuracy on lower frequencies.
+        // this.bufferSize = 2048;
+        this.bufferSize = 1536;
         this.buffer2 = [];
         this.buffer = new Float32Array(this.bufferSize);
         this.bufferPointer = 0;
         this.bufferIsFull = false;
 
-        this.pastDetectedPitchSize = 12; // When fps is 25, 12 is equal to ~500 ms
+        this.pastDetectedPitchSize = 200; // TODO: this could be dynamically controller
         this.pastDetectedPitches = [];
-        this.smoothingFactor = 0.05
+        this.smoothingFactor = 0.038
 
         this.lastTime = new Date();
     }
@@ -34,6 +37,7 @@ class TunerAudioProcessor extends AudioWorkletProcessor
             return true;
         }
 
+        let now = new Date();
         let inputData = inputChannels[0];
         this.adjustBuffer(inputData);
 
@@ -41,6 +45,7 @@ class TunerAudioProcessor extends AudioWorkletProcessor
 
         if (this.bufferIsFull)
         {
+            // TODO: Lets count these errors per second to confirm the theory about input being skipped because this takes too long!
             let inputError = this.detectDiscontinuity(this.buffer);
             if (inputError)
             {
@@ -74,9 +79,9 @@ class TunerAudioProcessor extends AudioWorkletProcessor
                 this.buffer2 = [];
             }
         }
-        else 
-        {
-        }
+
+        console.log(`processing time: ${new Date() - now}ms`)
+
         return true;
     }
 
@@ -87,6 +92,8 @@ class TunerAudioProcessor extends AudioWorkletProcessor
             let prev = buffer[i - 1];
             let current = buffer[i];
             let distance = Math.abs(prev - current);
+
+            // TODO: Another random parameter :)
             if (distance > 0.05)
             {
                 console.log(`Discontinuity Detected! at index ${i} with index ${i - 1}.Values ${prev} : ${current}; distance: ${distance}`);
@@ -98,9 +105,6 @@ class TunerAudioProcessor extends AudioWorkletProcessor
 
     adjustBuffer(inputData)
     {
-        
-        let originalBuffer = [... this.buffer];
-        let before = new Date();
         if (inputData.length > this.bufferSize) throw new Error("input data too big.");
 
         // console.log(`adjustBuffer: input len ${inputData.length}; bufferPointer: ${this.bufferPointer}; zero count: ${this.buffer.reduce((s, c) => s + (c === 0 ? 1 : 0), 0)};`);
@@ -128,32 +132,38 @@ class TunerAudioProcessor extends AudioWorkletProcessor
 
     processBuffer(buffer)
     {
-        let processing = new Processing(sampleRate, [30, 440]);
+        // TODO: This could be dynamically changed
+        // TOOD: The processing could also be correlated to FFT analysis for better result. 
+        let processing = new Processing(sampleRate, [80, 340]);
         let before = new Date();
-        let estimation = processing.getEstimatedFrequency(buffer, null, 2);
+        let estimation = processing.getEstimatedFrequency(buffer, this.lastDetectedPitch, 2);
         let estimatedPitch = estimation.estimatedFrequency;
         console.log(`Estimating pitch duration: ${new Date() - before}ms. Pitch: ${estimatedPitch}; confidence: ${estimation.confidence}`);
 
-        // if (estimation.confidence >= 0.8)
-        // {
-        //     this.pastDetectedPitches.push(estimatedPitch);
-        // }
-        // if (this.pastDetectedPitches.length > this.pastDetectedPitchSize)
-        // {
-        //     this.pastDetectedPitches.shift();
-        // }
+        // TODO: Confidence tend to change based on the processing frequency range.. also needs to be adjusted dynamically.
+        if (estimation.confidence >= 0.8)
+        {
+            this.pastDetectedPitches.push(estimatedPitch);
+        }
+        if (this.pastDetectedPitches.length > this.pastDetectedPitchSize)
+        {
+            this.pastDetectedPitches.shift();
+        }
 
-        // if (this.pastDetectedPitches.length > 0)
-        // {
-        //     let smoothedAverage = this.pastDetectedPitches[0];
-        //     for (let i = 1; i < this.pastDetectedPitches.length; i++)
-        //     {
-        //         smoothedAverage = smoothedAverage + this.smoothingFactor * (this.pastDetectedPitches[i] - smoothedAverage);
-        //     }
-        //     this.lastDetectedPitch = smoothedAverage;
-        //     // this.port.postMessage({ pitch: smoothedAverage });
-        // }
-        this.port.postMessage({ pitch: estimatedPitch, audioBuffer: buffer, audioBuffer2: this.buffer2, cmndCache: processing.cmndCache});
+        // TODOs:
+        // Where to reset these past pitches??
+        // Maybe we can detect a new string pluck by observing continous change in the pitches..
+        // so like if last 5 are different from the previous, it's likely new stirng in which case let's reset.
+        if (this.pastDetectedPitches.length > 0)
+        {
+            let smoothedAverage = this.pastDetectedPitches[0];
+            for (let i = 1; i < this.pastDetectedPitches.length; i++)
+            {
+                smoothedAverage = smoothedAverage + this.smoothingFactor * (this.pastDetectedPitches[i] - smoothedAverage);
+            }
+            this.lastDetectedPitch = smoothedAverage;
+            this.port.postMessage({ pitch: smoothedAverage, audioBuffer: buffer, audioBuffer2: this.buffer2, cmndCache: processing.cmndCache});
+        }
     }
 }
 

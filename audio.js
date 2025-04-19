@@ -22,8 +22,8 @@ class AppAudio {
         this.audioContext = new (window.AudioContext || window.webkit.audioContext)();
         const source = this.audioContext.createMediaStreamSource(stream);
 
-        await this.audioContext.audioWorklet.addModule("oscillator.js");
-        this.oscillator = new AudioWorkletNode(this.audioContext, "Oscillator");
+        // await this.audioContext.audioWorklet.addModule("oscillator.js");
+        // this.oscillator = new AudioWorkletNode(this.audioContext, "Oscillator");
         // source.connect(this.oscillator);
 
         await this.audioContext.audioWorklet.addModule("audioWorkletProcessor.js");

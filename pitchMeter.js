@@ -25,7 +25,7 @@ class PitchMeter
 
         this.canvasBoundsEl = document.getElementById("canvasBounds");
         this.canvasBoundsElRect = this.canvasBoundsEl.getBoundingClientRect();
-        this.canvas = document.getElementById("test");
+        this.canvas = document.getElementById("mainCanvas");
         this.canvasBoundsBBox = this.canvasBoundsEl.getBBox(); 
         this.canvas.width = this.canvasBoundsBBox.width * this.scale;
         this.canvas.height = this.canvasBoundsBBox.height * this.scale;

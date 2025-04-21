@@ -3,5 +3,6 @@
 var AUDIO_BUFFER_SIZE = 2048;
 var BACKGROUND_COLOR = "#0d0d0d"
 var WHITE = "#FFFFFF"
+var DEBUG_MODE = false;
 
 console.log(`AUDIO_BUFFER_SIZE: ${AUDIO_BUFFER_SIZE}`);

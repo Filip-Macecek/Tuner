@@ -3,19 +3,19 @@ body {
 }
 
 @media (max-width: 768px) {
-    #container, #container2 {
+    #container {
         width: 100%;
     }
 }
 
 @media (min-width: 769px) and (max-width: 1200px) {
-    #container, #container2 {
+    #container {
         width: 80;
     }
 }
 
 @media (min-width: 1201px) {
-    #container, #container2 {
+    #container {
         width: 60%;
     }
 }

@@ -1,4 +1,4 @@
-class PitchMeter2
+class PitchMeter
 {
     constructor()
     {
@@ -44,16 +44,30 @@ class PitchMeter2
     {
         this.drawHistory();
 
-        let normalizedCents = (cents + 50) / 100;
-        this.moveNeedle(normalizedCents);
+        if (cents != null)
+        {
+            let normalizedCents = (cents + 50) / 100;
+            this.moveNeedle(normalizedCents);
+            const roundedCents = Math.round(cents);
 
-        const roundedCents = Math.round(cents);
-        this.centText.textContent = roundedCents > 0 ? `+${roundedCents}` : roundedCents;
-        this.stringNumberText.textContent = stringNumber ? stringNumber : '-';
-        this.toneNameText.textContent = `${tone.tone.baseTone}${tone.octave}`;
-        this.sharpIcon.style.fill = tone.tone.isSharp ? WHITE : BACKGROUND_COLOR;
+            this.centText.textContent = roundedCents > 0 ? `+${roundedCents}` : roundedCents;
+            this.stringNumberText.textContent = stringNumber;
+            this.toneNameText.textContent = `${tone.tone.baseTone}${tone.octave}`;
+            this.sharpIcon.style.fill = tone.tone.isSharp ? WHITE : BACKGROUND_COLOR;
 
-        this.historyBuffer.push(normalizedCents);
+            this.historyBuffer.push(normalizedCents);
+        }
+        else
+        {
+            this.moveNeedle(0);
+            this.centText.textContent = '-';
+            this.stringNumberText.textContent = '-';
+            this.toneNameText.textContent = '-';
+            this.sharpIcon.style.fill = BACKGROUND_COLOR;
+
+            this.historyBuffer.push(-1000);
+        }
+
         if(this.historyBuffer.length > this.historyBufferSize)
         {
             this.historyBuffer.shift();

@@ -3,8 +3,8 @@ class AppAudio {
     {
         this.started = false;
         this.audioBuffer = new Float32Array(AUDIO_BUFFER_SIZE);
-        this.tauMax = 1760; // A6
         this.audioContext = null;
+        this.oscillator = null;
     }
 
     getSamplingRate()
@@ -15,41 +15,32 @@ class AppAudio {
 
     async startAsync()
     {
-        // try {
-            // Request access to the microphone
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            this.audioContext = new (window.AudioContext || window.webkit.audioContext)();
-            const source = this.audioContext.createMediaStreamSource(stream);
-            this.analyser = this.audioContext.createAnalyser();
-    
-            // Configure the analyser
-            this.analyser.fftSize = AUDIO_BUFFER_SIZE;  // Buffer size (adjustable)
-            
-            // Connect the microphone input to the analyser
-            source.connect(this.analyser);
-            console.log(`audio: sampleRate: ${this.audioContext.sampleRate} Hz`);
-            console.log(`audio: buffer timespan: ${(AUDIO_BUFFER_SIZE/this.audioContext.sampleRate)/1000} ms`);
-            
-            this.started = true;
-            
-            // function processAudio() {
-            //     analyser.getFloatTimeDomainData(dataArray);  // Get raw audio data
-                
-            //     // 🔹 At this point, you have the raw waveform in `dataArray`
-            //     console.log(dataArray);  // Log to see the values
-                
-            //     requestAnimationFrame(processAudio);  // Keep processing audio
-            // }
-    
-            // processAudio();
-        // } catch (error) {
-        //     window.alert("Microphone access denied or error:", error);
-        // }
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        this.audioContext = new (window.AudioContext || window.webkit.audioContext)();
+        this.analyser = this.audioContext.createAnalyser();
+
+        // Configure the analyser
+        this.analyser.fftSize = AUDIO_BUFFER_SIZE;  // Buffer size (adjustable)
+        
+        // Connect the microphone input to the analyser
+        const source = this.audioContext.createMediaStreamSource(stream);
+        source.connect(this.analyser);
+        console.log(`audio: sampleRate: ${this.audioContext.sampleRate} Hz`);
+        console.log(`audio: buffer timespan: ${(AUDIO_BUFFER_SIZE/this.audioContext.sampleRate)/1000} ms`);
+        
+        // Oscillator for debugging.
+        // await this.audioContext.audioWorklet.addModule("oscillator.js");
+        // this.oscillator = new AudioWorkletNode(this.audioContext, "Oscillator");
+        // source.connect(this.oscillator);
+        await this.audioContext.resume();
+
+        this.started = true;
     }
 
-    captureNext()
+    captureNext(buffer)
     {
         Guard.failIf(!this.started);
-        this.analyser.getFloatTimeDomainData(this.audioBuffer); 
+        Guard.failIf(buffer.length != AUDIO_BUFFER_SIZE);
+        this.analyser.getFloatTimeDomainData(buffer); 
     }
 }

@@ -47,7 +47,7 @@ class Processing
     differenceFunction(audioBuffer, lag)
     {
         let cachedDfValue = this.dfCache[lag];
-        if (cachedDfValue)
+        if (cachedDfValue != null)
         {
             return this.dfCache[lag];
         }
@@ -70,7 +70,14 @@ class Processing
             sum += this.differenceFunction(audioBuffer, j);
         }
 
-        return lag * df / sum;
+        if (sum !== 0)
+        {
+            return lag * df / sum;
+        }
+        else 
+        {
+            return lag * df / 10e-12;
+        }
     }
     
     lagToFrequency(lag)
@@ -82,7 +89,7 @@ class Processing
     frequencyToLag(f)
     {
         Guard.failIf(f < 1, `Invalid frequency ${f}.`);
-        return f / this.samplingRate;
+        return Math.round(this.samplingRate / f);
     }
 
     // TODO: If this starts returning wrong frequency, one possible reason is that the multiples of the lagCandidate returns lower df ... it could be fixed by specifying threshold, or research more.
@@ -105,10 +112,14 @@ class Processing
             acfResults.push(`lag: ${lag} = ${cmnd}`);
         }
 
-        let confidence = 1 - (minRes / (results.reduce((prev, curr, _) => prev + curr, 0) / results.length));
+        let average = Math.max((results.reduce((prev, curr, _) => prev + curr, 0) / results.length), 10e-12);
+        let confidence = 1 - (minRes / average);
         confidence = Math.max(0, Math.min(1, confidence));
 
         let estimatedFrequency = this.lagToFrequency(lagCandidate);
+
+        // TODO: This is the previous pitch correlation. Maybe let's seperate it into it's own method.
+        // TODO: This correlation will stop working if for example someone tunes high E and then low E immediatelly after. This needs to be tested.
         let harmonic = previousPitch == null ? 1 : [0.25, 0.5, 1, 2].reduce((prev, multiple, _) => {
             let offset = Math.abs(previousPitch - estimatedFrequency * multiple)
             if (offset <= tolerance)
@@ -116,6 +127,7 @@ class Processing
                 const lag = this.frequencyToLag(estimatedFrequency * multiple);
                 const res = this.cmndCache[lag];
 
+                // TODO: Another parameter for tweaking
                 if (Math.abs(res - minRes) < 0.5)
                 {
                     return multiple;

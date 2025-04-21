@@ -2,41 +2,38 @@ class App
 {
     constructor()
     {
-        this.audio = new AppAudio();
         this.appCanvas = new AppCanvas();
         this.amplitudeMeter = new AmplitudeMeter();
         this.pitchMeter2 = new PitchMeter2();
         this.frameCounter = 0;
-        this.totalFrames = 60;
-        this.processor = null;
-        this.latestData = null;
+        this.cmndfRetentionFrameCount = 60;
+        this.processor = new Processor();
     }
 
     async initAsync()
     {
-        await this.audio.startAsync();
+        await this.processor.initAudioAsync();
         this.amplitudeMeter.initialize();
         this.pitchMeter2.initialize();
     }
 
-    loop()
+    start()
     {
-        const pitch = JSON.parse(JSON.stringify(this.audio.pitch));
-        if (pitch !== null) // TODO 
-        {
-            let closestTone = Music.getClosestTone(pitch);
-            let cents = Music.getCentsDistance(pitch, closestTone.toneFrequency)
-            this.draw(1, cents, closestTone, pitch, pitch, this.audio.audioBuffer, this.audio.cmndCache, 0.9, null);
-        }
-
-        requestAnimationFrame(this.loop.bind(this));
+        this.process();
+        this.draw();
     }
 
-    draw(rms, cents, closestTone, detectedPitch, smoothedPitch, buffer, cmndCache, confidence, stringNumber)
+    process()
+    {
+        this.processor.process();
+        setTimeout(this.process.bind(this), 1); // TODO: This parameter
+    }
+
+    draw()
     {
         // this.amplitudeMeter.clear();
 
-        if (this.frameCounter > this.totalFrames)
+        if (this.frameCounter > this.cmndfRetentionFrameCount)
         {
             this.frameCounter = 0;
             this.appCanvas.cmndsReset();
@@ -44,15 +41,19 @@ class App
 
         // this.amplitudeMeter.drawAmplitude(rms);
         // console.log(`cents calculation: result: ${cents}, detectedPitch: ${detectedPitch}, smoothedPitch: ${smoothedPitch}, closestToneFrequency: ${closestTone.toneFrequency}, confidence: ${confidence}}`);
-        this.pitchMeter2.update(cents, closestTone, stringNumber);
+        if (this.processor.cents)
+        {
+            this.pitchMeter2.update(this.processor.cents, this.processor.detectedTone, this.processor.stringNumber);
+        }
 
         this.appCanvas.clear();
-        if (buffer) this.appCanvas.drawAudio(buffer);
-        if (buffer) this.appCanvas.drawAudio2(this.audio.audioBuffer2);
-        if (smoothedPitch) this.appCanvas.drawFrequency(smoothedPitch);
-        if (cmndCache) this.appCanvas.plotCmnds(cmndCache, this.totalFrames);
+        this.appCanvas.drawAudio(this.processor.buffer);
+        if (this.processor.lastEstimatedPitch) this.appCanvas.drawFrequency(this.processor.lastEstimatedPitch);
+        if (this.processor.lastCmndCache) this.appCanvas.plotCmnds(this.processor.lastCmndCache, this.cmndfRetentionFrameCount);
 
         this.frameCounter++;
+
+        requestAnimationFrame(this.draw.bind(this));
     }
 }
 
@@ -68,7 +69,7 @@ function initializeApp() {
     let app = new App();
     let initPromise = app.initAsync();
     initPromise.then(() => {
-        app.loop();
+        app.start();
     });
 
     // document.addEventListener('visibilitychange', () => {

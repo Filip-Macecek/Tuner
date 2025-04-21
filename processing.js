@@ -1,8 +1,7 @@
-// TODO: how to use the Guard? It's not a module yet.
 class Processing
 {
     constructor(samplingRate, frequencyBounds) {
-        // Guard.failIf(frequencyBounds.length != 2 || frequencyBounds.some(v => v < 1 || v > 20000), "Supported frequencies are 30 Hz up to 20 kHz")
+        Guard.failIf(frequencyBounds.length != 2 || frequencyBounds.some(v => v < 1 || v > 20000), "Supported frequencies are 30 Hz up to 20 kHz")
         this.samplingRate = samplingRate;
         this.lagBounds = [Math.round(this.samplingRate / frequencyBounds[1]), Math.round(this.samplingRate / frequencyBounds[0])]
         this.dfCache = {};
@@ -83,13 +82,13 @@ class Processing
     
     lagToFrequency(lag)
     {
-        // Guard.failIf(lag < 1, `Invalid lag ${lag}.`);
+        Guard.failIf(lag < 1, `Invalid lag ${lag}.`);
         return this.samplingRate / lag;
     }
 
     frequencyToLag(f)
     {
-        // Guard.failIf(f < 1, `Invalid frequency ${f}.`);
+        Guard.failIf(f < 1, `Invalid frequency ${f}.`);
         return Math.round(this.samplingRate / f);
     }
 
@@ -113,7 +112,8 @@ class Processing
             acfResults.push(`lag: ${lag} = ${cmnd}`);
         }
 
-        let confidence = 1 - (minRes / (results.reduce((prev, curr, _) => prev + curr, 0) / results.length));
+        let average = Math.max((results.reduce((prev, curr, _) => prev + curr, 0) / results.length), 10e-12);
+        let confidence = 1 - (minRes / average);
         confidence = Math.max(0, Math.min(1, confidence));
 
         let estimatedFrequency = this.lagToFrequency(lagCandidate);
@@ -148,5 +148,3 @@ class Processing
         }
     }
 }
-
-export default Processing;

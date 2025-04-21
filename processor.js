@@ -21,10 +21,35 @@ class Processor
     process()
     {
         this.audio.captureNext(this.buffer);
+
         // Guard.failIf()
         // TODO: The frequencies could be dynamically changed
         // TOOD: The processing could also be correlated to FFT analysis for better result. 
         let processing = new Processing(this.sampleRate, [80, 340]);
+
+        let rms = processing.getRmsDecibels(this.buffer);
+
+        // Complete silnce is somewhere between -55 to -65
+        if (rms > -53)
+        {
+            this.detectPitch(processing);
+        }
+        else 
+        {
+            this.detectedPitch = null;
+            this.pastDetectedPitches = [];
+        }
+        
+        this.detectedTone = this.detectedPitch ? Music.getClosestTone(this.detectedPitch) : null;
+        this.cents = this.detectedTone ? Music.getCentsDistance(this.detectedPitch, this.detectedTone.toneFrequency) : null;
+        this.stringNumber = this.detectedTone ? Music.getStringNumber(this.detectedTone) : null;
+
+        this.peak = processing.getPeakDecibels(this.buffer);
+        this.rms = rms;
+    }
+
+    detectPitch(processing)
+    {
         // TODO: last parameter is the tolerance.. it should increase with lowering frequency
         let estimation = processing.getEstimatedFrequency(this.buffer, this.detectedPitch, 2);
         this.lastCmndCache = processing.cmndCache;
@@ -54,15 +79,5 @@ class Processor
             }
             this.detectedPitch = smoothedAverage;
         }
-        
-        if (this.detectedPitch)
-        {
-            this.detectedTone = Music.getClosestTone(this.detectedPitch);
-            this.cents = this.detectedTone ? Music.getCentsDistance(this.detectedPitch, this.detectedTone.toneFrequency) : -50;
-            this.stringNumber = Music.getStringNumber(this.detectedTone)
-        }
-
-        this.peak = processing.getPeakDecibels(this.buffer);
-        this.rms = processing.getRmsDecibels(this.buffer);
     }
 }

@@ -4,7 +4,7 @@ class App
     {
         this.appCanvas = new AppCanvas();
         this.amplitudeMeter = new AmplitudeMeter();
-        this.pitchMeter2 = new PitchMeter2();
+        this.pitchMeter = new PitchMeter();
         this.frameCounter = 0;
         this.cmndfRetentionFrameCount = 60;
         this.processor = new Processor();
@@ -14,7 +14,7 @@ class App
     {
         await this.processor.initAudioAsync();
         this.amplitudeMeter.initialize();
-        this.pitchMeter2.initialize();
+        this.pitchMeter.initialize();
     }
 
     start()
@@ -41,10 +41,7 @@ class App
 
         // this.amplitudeMeter.drawAmplitude(rms);
         // console.log(`cents calculation: result: ${cents}, detectedPitch: ${detectedPitch}, smoothedPitch: ${smoothedPitch}, closestToneFrequency: ${closestTone.toneFrequency}, confidence: ${confidence}}`);
-        if (this.processor.cents)
-        {
-            this.pitchMeter2.update(this.processor.cents, this.processor.detectedTone, this.processor.stringNumber);
-        }
+        this.pitchMeter.update(this.processor.cents, this.processor.detectedTone, this.processor.stringNumber);
 
         this.appCanvas.clear();
         this.appCanvas.drawAudio(this.processor.buffer);

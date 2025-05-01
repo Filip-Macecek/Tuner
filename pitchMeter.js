@@ -2,7 +2,7 @@ class PitchMeter
 {
     constructor()
     {
-        this.historyBufferSize = 500;
+        this.historyBufferSize = 400;
         this.historyBuffer = [];
     }
 
@@ -34,10 +34,13 @@ class PitchMeter
         this.canvas.style.left = `${(this.canvasBoundsBBox.x * this.scale + this.svgBRect.x + window.scrollX)}px`;
         this.ctx = this.canvas.getContext("2d");
 
-        this.centText = document.getElementById("centsOffset").querySelector("tspan");
-        this.stringNumberText = document.getElementById("stringNumber").querySelector("tspan");
+        // this.centText = document.getElementById("centsOffset").querySelector("tspan");
+        // this.stringNumberText = document.getElementById("stringNumber").querySelector("tspan");
         this.toneNameText = document.getElementById("toneName").querySelector("tspan");
-        this.sharpIcon = document.getElementById("sharp").querySelector("tspan");;
+        this.sharpIcon = document.getElementById("sharp").querySelector("tspan");
+
+        this.leftArrow = document.getElementById("leftArrow");
+        this.rightArrow = document.getElementById("rightArrow");
     }
 
     update(cents, tone, stringNumber)
@@ -48,24 +51,42 @@ class PitchMeter
         {
             let normalizedCents = (cents + 50) / 100;
             this.moveNeedle(normalizedCents);
-            const roundedCents = Math.round(cents);
+            // const roundedCents = Math.round(cents);
 
-            this.centText.textContent = roundedCents > 0 ? `+${roundedCents}` : roundedCents;
-            this.stringNumberText.textContent = stringNumber;
+            // this.centText.textContent = roundedCents > 0 ? `+${roundedCents}` : roundedCents;
+            // this.stringNumberText.textContent = stringNumber;
             this.toneNameText.textContent = `${tone.tone.baseTone}${tone.octave}`;
+            this.toneNameText.style.fill = WHITE;
             this.sharpIcon.style.fill = tone.tone.isSharp ? WHITE : BACKGROUND_COLOR;
+            this.leftArrow.style.fill = normalizedCents > 0 ? WHITE : BACKGROUND_COLOR;
+            this.rightArrow.style.fill = normalizedCents < 0 ? WHITE : BACKGROUND_COLOR;
+            const isTuned = Math.abs(cents) < INTUNE_TOLERANCE;
+            if (isTuned)
+            {
+                this.leftArrow.style.fill = GREEN;
+                this.rightArrow.style.fill = GREEN;
+                this.toneNameText.style.fill = GREEN;
 
-            this.historyBuffer.push(normalizedCents);
+                if (tone.tone.isSharp)
+                {
+                    this.sharpIcon.style.fill = GREEN;
+                }
+            }
+
+            this.historyBuffer.push({ normalizedCents: normalizedCents, inTune: isTuned });
         }
         else
         {
             this.moveNeedle(0);
-            this.centText.textContent = '-';
-            this.stringNumberText.textContent = '-';
-            this.toneNameText.textContent = '-';
+            // this.centText.textContent = '-';
+            // this.stringNumberText.textContent = '-';
+            this.toneNameText.textContent = '';
             this.sharpIcon.style.fill = BACKGROUND_COLOR;
+            this.sharpIcon.style.fill = BACKGROUND_COLOR;
+            this.leftArrow.style.fill = BACKGROUND_COLOR;
+            this.rightArrow.style.fill = BACKGROUND_COLOR;
 
-            this.historyBuffer.push(-1000);
+            this.historyBuffer.push({ normalizedCents: -1000, inTune: false });
         }
 
         if(this.historyBuffer.length > this.historyBufferSize)
@@ -82,28 +103,30 @@ class PitchMeter
         let points = []
         for (let i = this.historyBuffer.length - 1; i >= 0; i--)
         {
-            let x = canvasRect.width * this.historyBuffer[i];
+            let o = this.historyBuffer[i];
+            let x = canvasRect.width * o.normalizedCents;
             let y = canvasRect.height / this.historyBufferSize * (this.historyBuffer.length - i);
-            points.push([x, y]);
+            points.push({ x: x, y: y, color: o.inTune ? GREEN : WHITE });
         }
 
         const pointWidth = 4;
-        const notTunedColor = 0xFFFFFF;
-        const tunedColor = 0x87b37a;
+        // const notTunedColor = 0xFFFFFF;
+        // const tunedColor = 0x87b37a;
         for (let i = 0; i < points.length - 1; i++)
         {
-            let x = points[i][0];
-            let y = points[i][1];
+            let x = points[i].x;
+            let y = points[i].y;
             this.ctx.beginPath();
             this.ctx.arc(x, y, pointWidth, 0, 2 * Math.PI);
             let alpha = 1 - (y / canvasRect.height) ** 4;
-            let colorProgression = Math.max(0, 1 - 2 * Math.abs((x / canvasRect.width) - 0.5) ** 0.68);
-            let color = this.getColor(notTunedColor, tunedColor, colorProgression);
-            this.ctx.fillStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
+            // let colorProgression = Math.max(0, 1 - 2 * Math.abs((x / canvasRect.width) - 0.5) ** 0.68);
+            let color = points[i].color;
+            this.ctx.fillStyle = color;
             this.ctx.fill();
         }
     }
 
+    // Applies gradient from base to target based on a normalized number k
     getColor(base, target, k)
     {
         const baseRed = (base & 0xFF0000) >> 16;

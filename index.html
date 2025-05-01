@@ -1,196 +1,158 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
       <div id="container" class="margin_auto">
+        <!-- <div id="loader"></div>
+        <style>
+          #loader {
+              height: 80px;
+              width: 20px;
+              color: #514b82;
+              background:
+              radial-gradient(farthest-side,currentColor 94%,#0000 ) top/8px 8px,
+              linear-gradient(currentColor 0 0) top/4px 70%,
+              conic-gradient(from -30deg at bottom,#0000,currentColor 2deg 58deg,#0000 60deg) bottom            /100% 20px,
+              conic-gradient(from 150deg at top   ,#0000,currentColor 2deg 58deg,#0000 60deg) bottom 20px left 0/100% 20px;
+              background-repeat: no-repeat;
+              transform-origin: 50% 4px;
+              animation: l15 2s infinite cubic-bezier(0.5,300,0.5,-300);
+          }
+          @keyframes l15 { 
+              100% {transform: rotate(0.5deg)}
+          }
+        </style> -->
         <canvas id="mainCanvas" style="position:absolute; z-index: -1;"></canvas>
         <svg
-           viewBox="0 0 512 390"
-           version="1.1"
-           id="svg1"
-           xmlns="http://www.w3.org/2000/svg"
-           xmlns:svg="http://www.w3.org/2000/svg">
-          <defs
-             id="defs1">
-            <rect
-               x="352"
-               y="72"
-               width="320"
-               height="160"
-               id="rect6" />
-          </defs>
-          <path
-             style="fill:#fdfdfd;fill-opacity:1;stroke:#2e2e2e;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke markers fill"
-             d="M 251.00195,116 256,126 l 5,-10 z"
-             id="path3" />
-          <g
-             id="layer8">
-            <path
-               style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
-               d="M 251.00195,116 256,126 l 5,-10 z"
-               id="path4" />
-          </g>
-          <g
-             id="layer6">
-            <rect
-               style="fill:#2e2e2e;fill-opacity:1;fill-rule:nonzero;stroke:#2e2e2e;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
-               id="rect13"
-               width="130"
-               height="90"
-               x="336"
-               y="16" />
-            <rect
-               style="fill:#2e2e2e;fill-opacity:1;fill-rule:nonzero;stroke:#2e2e2e;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
-               id="rect12"
-               width="130"
-               height="90"
-               x="196"
-               y="16" />
-            <rect
-               style="fill:#2e2e2e;fill-opacity:1;fill-rule:nonzero;stroke:#2e2e2e;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
-               id="rect11"
-               width="140"
-               height="90"
-               x="46"
-               y="16" />
-          </g>
-          <rect
-             style="fill:#5aa02c;fill-opacity:0;stroke:#2dbcde;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
-             id="canvasBounds"
-             width="400"
-             height="240"
-             x="56"
-             y="136" />
-          <g
-             id="pitchScale"
-             style="stroke-width:2;stroke-dasharray:none">
-            <path
-               style="fill:#ffffff;stroke:#ffffff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
-               d="m 56,126 c 0,20 0,20 0,20 v 0"
-               id="path10" />
-            <path
-               style="fill:#ffffff;stroke:#ffffff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
-               d="m 456,126 c 0,20 0,20 0,20 v 0"
-               id="path11" />
-            <path
-               style="fill:#ffffff;stroke:#ffffff;stroke-width:2;stroke-dasharray:none;stroke-opacity:1"
-               d="m 56,136 h 400 v 0"
-               id="path7" />
-          </g>
-          <path
-             style="fill:#87b37a;fill-opacity:1;stroke:#87b37a;stroke-width:14;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
-             d="m 246,136 c 20,0 20,0 20,0"
-             id="path19" />
-          <path
-             style="fill:#d7263d;fill-opacity:1;stroke:#d7263d;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
-             d="m 56,116 c 0,40 0,40 0,40"
-             id="needle" />
-          <g
-             id="layer4"
-             style="stroke-width:0;stroke-dasharray:none;paint-order:stroke markers fill">
-            <text
-               xml:space="preserve"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:arial;-inkscape-font-specification:arial;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
-               x="26"
-               y="136"
-               id="text16"><tspan
-                 id="tspan16"
-                 x="26"
-                 y="136">−50</tspan></text>
-            <text
-               xml:space="preserve"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:arial;-inkscape-font-specification:arial;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
-               x="465.33203"
-               y="135.85352"
-               id="text17"><tspan
-                 id="tspan17"
-                 x="465.33203"
-                 y="135.85352">+50</tspan></text>
-          </g>
-          <g
-             id="layer2"
-             transform="translate(10,10)">
-            <text
-               xml:space="preserve"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:64px;font-family:arial;-inkscape-font-specification:arial;text-align:start;letter-spacing:0px;writing-mode:lr-tb;direction:ltr;text-anchor:start;display:inline;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
-               x="56"
-               y="86"
-               id="toneName"><tspan
-                 x="56"
-                 y="86"
-                 id="tspan1"
-                 style="letter-spacing:0px">A1</tspan></text>
-            <text
-               xml:space="preserve"
-               style="font-size:48px;font-family:arial;-inkscape-font-specification:arial;text-align:start;letter-spacing:2.5px;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#0d0d0d;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke markers fill"
-               x="133.07812"
-               y="81.078125"
-               id="sharp"><tspan
-                 id="tspan4"
-                 style="font-size:48px;fill:#0d0d0d;fill-opacity:1;stroke-width:0;stroke-dasharray:none"
-                 x="133.07812"
-                 y="81.078125">♯</tspan></text>
-            <text
-               xml:space="preserve"
-               style="font-size:18.6667px;font-family:arial;-inkscape-font-specification:arial;text-align:center;letter-spacing:0px;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke markers fill"
-               x="106"
-               y="26"
-               id="text7"><tspan
-                 id="tspan7"
-                 style="font-size:18.6667px;fill:#ffffff;fill-opacity:1;stroke-width:0"
-                 x="106"
-                 y="26">tón</tspan></text>
-          </g>
-          <g
-             id="layer3">
-            <text
-               xml:space="preserve"
-               transform="matrix(0.5,0,0,0.5,0.71875,1.570467)"
-               id="centsOffset"
-               style="font-size:128px;font-family:arial;-inkscape-font-specification:arial;text-align:center;letter-spacing:0px;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect6);display:inline;fill:#87b37a;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke markers fill"
-               x="-101.9375"
-               y="0"><tspan
-                 x="403.4375"
-                 y="187.29657"
-                 id="tspan2">+50</tspan></text>
-            <text
-               xml:space="preserve"
-               style="font-size:18.6667px;font-family:arial;-inkscape-font-specification:arial;text-align:center;letter-spacing:0px;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke markers fill"
-               x="256"
-               y="36"
-               id="text8"><tspan
-                 id="tspan8"
-                 style="font-size:18.6667px;fill:#ffffff;fill-opacity:1;stroke-width:0"
-                 x="256"
-                 y="36">odchylka</tspan></text>
-          </g>
-          <g
-             id="layer5">
-            <text
-               xml:space="preserve"
-               style="font-size:18.6667px;font-family:arial;-inkscape-font-specification:arial;text-align:center;letter-spacing:0px;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke markers fill"
-               x="396"
-               y="36"
-               id="text9"><tspan
-                 id="tspan9"
-                 style="font-size:18.6667px;fill:#ffffff;fill-opacity:1;stroke-width:0"
-                 x="396"
-                 y="36">č. struny</tspan></text>
-            <text
-               xml:space="preserve"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:64px;font-family:arial;-inkscape-font-specification:arial;text-align:start;letter-spacing:0px;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#2dbcde;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
-               x="379.8891"
-               y="96"
-               id="stringNumber"><tspan
-                 id="tspan19"
-                 x="379.8891"
-                 y="96"
-                 style="font-size:64px">2</tspan></text>
-          </g>
-        </svg>        
+   viewBox="0 0 450 340"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs1"><linearGradient
+       id="linearGradient1"><stop
+         style="stop-color:#2dbcde;stop-opacity:0;"
+         offset="0"
+         id="stop19" /><stop
+         style="stop-color:#2dbcde;stop-opacity:0.40000001;"
+         offset="0.12727273"
+         id="stop3" /><stop
+         style="stop-color:#2dbcde;stop-opacity:1;"
+         offset="0.50372207"
+         id="stop1" /><stop
+         style="stop-color:#2dbcde;stop-opacity:0.40000001;"
+         offset="0.85000002"
+         id="stop2" /><stop
+         style="stop-color:#2dbcde;stop-opacity:0;"
+         offset="1"
+         id="stop20" /></linearGradient><linearGradient
+       xlink:href="#linearGradient1"
+       id="linearGradient2"
+       x1="15.49922"
+       y1="240.875"
+       x2="436.25079"
+       y2="240.875"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1,0,0,0.82330499,0.48928974,32.697234)" /><filter
+       style="color-interpolation-filters:sRGB"
+       id="filter18"
+       x="-0.14206701"
+       y="-0.014917549"
+       width="1.284134"
+       height="1.0298351"><feGaussianBlur
+         stdDeviation="1.1825315"
+         id="feGaussianBlur18" /></filter></defs><path
+     d="m 16.022984,136.02298 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 9.999996,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 v 190.22781 m 10,-190.22781 V 326.25079 M 16.022984,136.02298 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858 m -420.455596,10 H 436.47858"
+     style="display:none;opacity:0.497053;fill:none;stroke:#2dbcde;stroke-width:0.5px;stroke-opacity:1"
+     id="path18" /><rect
+     style="opacity:0.25;mix-blend-mode:normal;fill:#87b37a;fill-opacity:1;stroke:#87b37a;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers;filter:url(#filter18)"
+     id="rect13"
+     height="190.25079"
+     x="216.01149"
+     y="136"
+     width="19.97702" /><path
+     d="M 26.011494,136 V 326.47781 M 36.011494,136 V 326.47781 M 46.011494,136 V 326.47781 M 56.011494,136 V 326.47781 M 66.011494,136 V 326.47781 M 76.011494,136 V 326.47781 M 86.011494,136 V 326.47781 M 96.011494,136 V 326.47781 M 106.01149,136 V 326.47781 M 116.01149,136 V 326.47781 M 126.01149,136 V 326.47781 M 136.01149,136 V 326.47781 M 146.01149,136 V 326.47781 M 156.01149,136 V 326.47781 M 166.01149,136 V 326.47781 M 176.01149,136 V 326.47781 M 186.01149,136 V 326.47781 M 196.01149,136 V 326.47781 M 206.01149,136 V 326.47781 M 216.01149,136 V 326.47781 M 226.01149,136 V 326.47781 M 236.01149,136 V 326.47781 M 246.01149,136 V 326.47781 M 256.01149,136 V 326.47781 M 266.01149,136 V 326.47781 M 276.01149,136 V 326.47781 M 286.01149,136 V 326.47781 M 296.01149,136 V 326.47781 M 306.01149,136 V 326.47781 M 316.01149,136 V 326.47781 M 326.01149,136 V 326.47781 M 336.01149,136 V 326.47781 M 346.01149,136 V 326.47781 M 356.01149,136 V 326.47781 M 366.01149,136 V 326.47781 M 376.01149,136 V 326.47781 M 386.01149,136 V 326.47781 M 396.01149,136 V 326.47781 M 406.01149,136 V 326.47781 M 416.01149,136 V 326.47781 M 426.01149,136 V 326.47781 M 436.01149,136 V 326.47781 M 16.011494,136 H 436.71709 M 16.011494,146 H 436.71709 M 16.011494,156 H 436.71709 M 16.011494,166 H 436.71709 M 16.011494,176 H 436.71709 M 16.011494,186 H 436.71709 M 16.011494,196 H 436.71709 M 16.011494,206 H 436.71709 M 16.011494,216 H 436.71709 M 16.011494,226 H 436.71709 M 16.011494,236 H 436.71709 M 16.011494,246 H 436.71709 M 16.011494,256 H 436.71709 M 16.011494,266 H 436.71709 M 16.011494,276 H 436.71709 M 16.011494,286 H 436.71709 M 16.011494,296 H 436.71709 M 16.011494,306 H 436.71709 M 16.011494,316 H 436.71709 M 16.011494,326 H 436.71709 M 16.011494,326.47781 V 136 c 420.227016,0.22702 419.999996,0 419.999996,0"
+     style="display:inline;opacity:0.5;fill:none;stroke:url(#linearGradient2);stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1"
+     id="path1" /><path
+     style="fill:#87b37a;fill-opacity:0.440501;stroke:#87b37a;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+     d="M 226,136 V 326"
+     id="path16" /><g
+     id="pitchScale"
+     style="display:inline;stroke-width:2;stroke-dasharray:none"
+     transform="translate(-12,32.52469)"><path
+       style="display:inline;opacity:1;fill:#87b37a;fill-opacity:0;stroke:#2dbcde;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"
+       d="M 28.011494,103.47531 H 448 447.52198 Z"
+       id="path20" /></g><g
+     id="layer8"><path
+       style="fill:#d7263d;fill-opacity:1;stroke:#d7263d;stroke-width:1.0001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       d="m 6.013454,116 9.99804,20 10.00196,-20 z"
+       id="needle" /></g><g
+     id="layer6"><rect
+       style="fill:#2e2e2e;fill-opacity:1;fill-rule:nonzero;stroke:#2e2e2e;stroke-width:2.98807;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect11"
+       width="200"
+       height="90"
+       x="126"
+       y="15.28125" /><path
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"
+       d="m 296,46 c 20,20 20,20 20,20 l -20,20 z"
+       id="rightArrow" /><path
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"
+       d="m 156,46 c -20,20 -20,20 -20,20 l 20,20 z"
+       id="leftArrow" /></g><rect
+     style="display:inline;fill:#5aa02c;fill-opacity:0;stroke:#2dbcde;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+     id="canvasBounds"
+     width="420"
+     height="189.77222"
+     x="16.25078"
+     y="136.25078" /><g
+     id="layer2"
+     transform="translate(10,10)"><text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:64px;font-family:arial;-inkscape-font-specification:arial;text-align:start;letter-spacing:0px;writing-mode:lr-tb;direction:ltr;text-anchor:start;display:inline;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="166"
+       y="85.28125"
+       id="toneName"><tspan
+         x="166"
+         y="85.28125"
+         id="tspan1"
+         style="letter-spacing:0px;stroke-width:0">A1</tspan></text><text
+       xml:space="preserve"
+       style="font-size:48px;font-family:arial;-inkscape-font-specification:arial;text-align:start;letter-spacing:2.5px;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#0d0d0d;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke markers fill"
+       x="243.07812"
+       y="80.359375"
+       id="sharp"><tspan
+         id="tspan4"
+         style="font-size:48px;fill:#0d0d0d;fill-opacity:1;stroke-width:0;stroke-dasharray:none"
+         x="243.07812"
+         y="80.359375">♯</tspan></text><text
+       xml:space="preserve"
+       style="font-size:18.6667px;font-family:arial;-inkscape-font-specification:arial;text-align:center;letter-spacing:0px;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke markers fill"
+       x="216"
+       y="25.28125"
+       id="text7"><tspan
+         id="tspan7"
+         style="font-size:18.6667px;fill:#ffffff;fill-opacity:1;stroke-width:0"
+         x="216"
+         y="25.28125">tón</tspan></text></g><g
+     id="g5"
+     style="stroke-width:2;stroke-dasharray:none"><path
+       style="display:none;fill:#ffffff;stroke:#ffffff;stroke-width:2.04939;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       d="m 15.75078,126.25078 c 0,20 0,20 0,20 v 0"
+       id="path2" /><path
+       style="display:none;fill:#ffffff;stroke:#ffffff;stroke-width:2.04939;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       d="m 435.75078,126.25078 c 0,20 0,20 0,20 v 0"
+       id="path3" /><path
+       style="display:none;fill:#ffffff;stroke:#ffffff;stroke-width:2.04939;stroke-dasharray:none;stroke-opacity:1"
+       d="m 15.75078,136.25078 h 420 v 0"
+       id="path5" /></g></svg>
+
     </div>
     <div id="debug" class="margin_auto" style="display: none">
       <div id="tuner" class="margin_auto">

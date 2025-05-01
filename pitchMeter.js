@@ -61,8 +61,8 @@ export class PitchMeter
             this.toneNameText.textContent = `${tone.tone.baseTone}${tone.octave}`;
             this.toneNameText.style.fill = WHITE;
             this.sharpIcon.style.fill = tone.tone.isSharp ? WHITE : BACKGROUND_COLOR;
-            this.leftArrow.style.fill = normalizedCents > 0 ? WHITE : BACKGROUND_COLOR;
-            this.rightArrow.style.fill = normalizedCents < 0 ? WHITE : BACKGROUND_COLOR;
+            this.leftArrow.style.fill = cents > 0 ? WHITE : BACKGROUND_COLOR;
+            this.rightArrow.style.fill = cents < 0 ? WHITE : BACKGROUND_COLOR;
             const isTuned = Math.abs(cents) < INTUNE_TOLERANCE;
             if (isTuned)
             {

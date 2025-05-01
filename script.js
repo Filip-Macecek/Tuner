@@ -30,14 +30,30 @@ class App
             document.getElementById("debug").style.display = "initial";
         }
 
+        // clear the timeouts and start fresh in case this is called multiple times.
+        this.stop();
+
         this.process();
         this.draw();
+    }
+
+    stop()
+    {
+        if (this.processTimeoutId)
+        {
+            clearTimeout(this.processTimeoutId);
+        }
+
+        if (this.animationFrameRequestId)
+        {
+            cancelAnimationFrame(this.animationFrameRequestId);
+        }
     }
 
     process()
     {
         this.processor.process();
-        setTimeout(this.process.bind(this), 1); // TODO: This parameter
+        this.processTimeoutId = setTimeout(this.process.bind(this), 1); // TODO: This parameter
     }
 
     draw()
@@ -48,7 +64,7 @@ class App
 
         if (DEBUG_MODE === true) this.drawDebug();
 
-        requestAnimationFrame(this.draw.bind(this));
+        this.animationFrameRequestId = requestAnimationFrame(this.draw.bind(this));
     }
 
     drawDebug()
@@ -71,23 +87,52 @@ class App
 }
 
 if (document.readyState === 'complete') {
-    // Page is already loaded, execute immediately
     initializeApp();
-} else {
     // Wait for the load event
     window.addEventListener('load', initializeApp);
+}
+
+function toggleProcessing(app)
+{
+    if (document.visibilityState === 'visible')
+    {
+        app.start();
+    }
+    if (document.visibilityState === 'hidden')
+    {
+        app.stop();
+    }  
 }
 
 function initializeApp() {
     let app = new App();
     let initPromise = app.initAsync();
     initPromise.then(() => {
-        app.start();
-    });
+        toggleProcessing(app);
 
-    // document.addEventListener('visibilitychange', () => {
-    //      if (isInitialized && document.visibilityState === 'visible') {
-    //          app.loop();
-    //      }
-    // });
-}
+        document.addEventListener('visibilitychange', () => {
+            toggleProcessing(app);
+        });
+
+        // For debouncing the resize
+        let resizeTimeoutId = null;
+        const resizeDebounceMs = 150;
+        // Doesn't work too well :/
+        // This is also called on Zoom
+        addEventListener('resize', () =>
+        {
+            if (resizeTimeoutId !== null)
+            {
+                clearTimeout(resizeTimeoutId);
+            }
+
+            resizeTimeoutId = setTimeout(() => 
+            {
+                console.log("Reloading the app.")
+                location.reload();
+            }, resizeDebounceMs);
+        });
+    });
+};
+
+initializeApp();

@@ -10,7 +10,7 @@ body {
 
 @media (min-width: 769px) and (max-width: 1200px) {
     #container {
-        width: 80;
+        width: 80%;
     }
 }
 

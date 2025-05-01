@@ -1,4 +1,6 @@
-class AmplitudeMeter 
+import { Guard } from './guard.js';
+
+export class AmplitudeMeter 
 {
     constructor() 
     {

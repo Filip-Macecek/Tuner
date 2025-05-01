@@ -1,3 +1,4 @@
+// @ts-nocheck
 class Oscillator extends AudioWorkletProcessor {
     constructor() {
         super();
@@ -27,6 +28,6 @@ class Oscillator extends AudioWorkletProcessor {
 
         return true;
     }
-  }
+}
   
-  registerProcessor('Oscillator', Oscillator);
+registerProcessor('Oscillator', Oscillator);

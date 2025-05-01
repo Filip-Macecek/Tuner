@@ -1,4 +1,5 @@
-class AppCanvas
+// @ts-nocheck
+export class AppCanvas
 {
     constructor()
     {

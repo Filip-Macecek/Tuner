@@ -1,4 +1,8 @@
-class AppAudio {
+// @ts-nocheck
+import { Guard } from './guard.js';
+import { AUDIO_BUFFER_SIZE } from './globals.js';
+
+export class AppAudio {
     constructor()
     {
         this.started = false;

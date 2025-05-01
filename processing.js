@@ -1,4 +1,6 @@
-class Processing
+import { Guard } from './guard.js';
+
+export class Processing
 {
     constructor(samplingRate, frequencyBounds) {
         Guard.failIf(frequencyBounds.length != 2 || frequencyBounds.some(v => v < 1 || v > 20000), "Supported frequencies are 30 Hz up to 20 kHz")

@@ -1,4 +1,9 @@
-class Processor
+import { AppAudio } from './audio.js';
+import { Processing } from './processing.js';
+import { Music } from './music.js';
+import { AUDIO_BUFFER_SIZE } from './globals.js';
+
+export class Processor
 {
     constructor()
     {
@@ -67,7 +72,7 @@ class Processor
         }
 
         // TODOs:
-        // Where to reset these past pitches??
+        // Where to reset these past pitches?? 
         // Maybe we can detect a new string pluck by observing continous change in the pitches..
         // so like if last 5 are different from the previous, it's likely new stirng in which case let's reset.
         if (this.pastDetectedPitches.length > 0)

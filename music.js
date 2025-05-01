@@ -1,4 +1,6 @@
-class Music 
+import { Guard } from './guard.js';
+
+export class Music 
 {
     static SEMITONE_RATIO = 1.0594630943592953;
 

@@ -1,10 +1,9 @@
-// since we are capturing each animation frame, assuming FPS is 60 (period of ~16ms)
-// TODO: Figure out how to optimize the buffer size, so we are not loosing audio or capture audio in seperate thread.
-var AUDIO_BUFFER_SIZE = 2048;
-var BACKGROUND_COLOR = "#0d0d0d"
-var GREEN = "#87b37a"
-var WHITE = "#FFFFFF"
-var DEBUG_MODE = false;
-var INTUNE_TOLERANCE = 2; // in cents
+// Global constants for use throughout the application
+export const AUDIO_BUFFER_SIZE = 2048;
+export const BACKGROUND_COLOR = "#0d0d0d";
+export const GREEN = "#87b37a";
+export const WHITE = "#FFFFFF";
+export const DEBUG_MODE = false;
+export const INTUNE_TOLERANCE = 2; // in cents
 
 console.log(`AUDIO_BUFFER_SIZE: ${AUDIO_BUFFER_SIZE}`);

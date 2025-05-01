@@ -1,4 +1,7 @@
-class PitchMeter
+// @ts-nocheck
+import { GREEN, WHITE, BACKGROUND_COLOR, INTUNE_TOLERANCE } from './globals.js';
+
+export class PitchMeter
 {
     constructor()
     {

@@ -1,3 +1,10 @@
+// @ts-nocheck
+import { AmplitudeMeter } from "./amplitudeMeter.js";
+import { DEBUG_MODE } from "./globals.js";
+import { PitchMeter } from "./pitchMeter.js";
+import { Processor } from "./processor.js";
+import { AppCanvas } from "./visualisation.js";
+
 class App
 {
     constructor()

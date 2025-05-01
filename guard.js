@@ -1,6 +1,4 @@
-
-
-class Guard {
+export class Guard {
     static failIf(boolExpression, message)
     {
         if (boolExpression)

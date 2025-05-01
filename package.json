@@ -4,9 +4,10 @@
   "description": "Guitar tuner written in plain JS with no dependencies.",
   "main": "dist/script.js",
   "scripts": {
-    "build": "tsc && esbuild dist/script.js --bundle --minify --outfile=dist/bundle.js",
+    "release": "tsc && esbuild dist/script.js --bundle --minify --outfile=dist/bundle.js",
+    "dev": "tsc && esbuild dist/script.js --bundle --sourcemap --outfile=dist/bundle.js",
     "watch": "tsc --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "python ./server.py"
   },
   "keywords": [],
   "author": "",

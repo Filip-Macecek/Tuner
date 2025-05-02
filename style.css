@@ -31,20 +31,6 @@ body {
     margin-right: auto;
 }
 
-#amplitude_meter {
-    /* display: flex;
-    flex-direction: row; */
-    width: 20%;
-    height: 100%;
-}
-
-#pitch_meter {
-    /* display: flex;
-    flex-direction: row; */
-    width: 80%;
-    height: 100%;
-}
-
 div {
     border: 0px white solid;
 }

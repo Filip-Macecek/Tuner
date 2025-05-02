@@ -65,7 +65,6 @@ class App
 
     draw()
     {
-        // this.amplitudeMeter.drawAmplitude(rms);
         // console.log(`cents calculation: result: ${cents}, detectedPitch: ${detectedPitch}, smoothedPitch: ${smoothedPitch}, closestToneFrequency: ${closestTone.toneFrequency}, confidence: ${confidence}}`);
         this.pitchMeter.update(this.processor.cents, this.processor.detectedTone, this.processor.stringNumber);
 
@@ -76,7 +75,8 @@ class App
 
     drawDebug()
     {
-        // this.amplitudeMeter.clear();
+        this.amplitudeMeter.clear();
+        this.amplitudeMeter.drawAmplitude(this.processor.rms);
 
         if (this.frameCounter > this.cmndfRetentionFrameCount)
         {

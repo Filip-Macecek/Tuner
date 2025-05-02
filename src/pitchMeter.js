@@ -112,7 +112,7 @@ export class PitchMeter
             points.push({ x: x, y: y, color: o.inTune ? GREEN : WHITE });
         }
 
-        const pointWidth = 4;
+        const pointWidth = 2 * this.scale;
         // const notTunedColor = 0xFFFFFF;
         // const tunedColor = 0x87b37a;
         for (let i = 0; i < points.length - 1; i++)

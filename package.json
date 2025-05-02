@@ -4,16 +4,15 @@
   "description": "Guitar tuner written in plain JS with no dependencies.",
   "main": "dist/script.js",
   "scripts": {
-    "release": "tsc && esbuild dist/script.js --bundle --minify --outfile=dist/bundle.js",
-    "dev": "tsc && esbuild dist/script.js --bundle --sourcemap --outfile=dist/bundle.js",
-    "watch": "tsc --watch",
-    "serve": "python ./server.py"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "tsc && vite build && vite preview"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "esbuild": "^0.25.3",
+    "vite": "^6.3.2",
     "typescript": "^5.8.3"
   }
 }

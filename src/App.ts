@@ -1,18 +1,27 @@
-// @ts-nocheck
 import { AmplitudeMeter } from "./amplitudeMeter.js";
 import { DEBUG_MODE } from "./globals.js";
 import { PitchMeter } from "./pitchMeter.js";
-import { Processor } from "./processor.js";
+import { Processor } from "./Processor";
 import { AppCanvas } from "./visualisation.js";
 
 class App
 {
+    private pitchMeter: PitchMeter;
+    private processor: Processor;
+
+    // Used for debug.
+    private frameCounter: number;
+    private cmndfRetentionFrameCount: number;
+    private appCanvas: AppCanvas;
+    private amplitudeMeter: AmplitudeMeter;
+    private processTimeoutId: any;
+    private animationFrameRequestId: any;
+
     constructor()
     {
         this.pitchMeter = new PitchMeter();
         this.processor = new Processor();
 
-        // For debugging the algorithm.
         if (DEBUG_MODE === true)
         {
             this.frameCounter = 0;
@@ -86,7 +95,7 @@ class App
 
         this.appCanvas.clear();
         this.appCanvas.drawAudio(this.processor.buffer);
-        if (this.processor.lastEstimatedPitch) this.appCanvas.drawFrequency(this.processor.lastEstimatedPitch);
+        if (this.processor.lastUnsmoothedPitch) this.appCanvas.drawFrequency(this.processor.lastUnsmoothedPitch);
         if (this.processor.lastCmndCache) this.appCanvas.plotCmnds(this.processor.lastCmndCache, this.cmndfRetentionFrameCount);
 
         this.frameCounter++;

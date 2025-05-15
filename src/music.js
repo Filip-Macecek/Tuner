@@ -32,10 +32,12 @@ export class Music
         }
 
         let referenceTone;
+        let octave;
         for (let i = 0; i < this.A_OCTAVES.length; i++) {
             let octaveTone = this.A_OCTAVES[i];
             if (octaveTone < frequency) {
                 referenceTone = octaveTone;
+                octave = i;
             }
             else {
                 break;
@@ -63,7 +65,7 @@ export class Music
 
         return {
             tone: Music.TONES[semitoneOffset],
-            octave: 1,
+            octave: octave,
             toneFrequency: closestToneFrequency
         };
     }

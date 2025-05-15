@@ -1,7 +1,19 @@
 import { Guard } from './guard.js';
 
+export interface FrequencyEstimation
+{
+    estimatedFrequency: number;
+    confidence: number; // expressed as a number between 0 and 1 inclusive.
+}
+
 export class Processing
 {
+    public cmndCache: {};
+    
+    private samplingRate: any;
+    private lagBounds: number[];
+    private dfCache: {};
+
     constructor(samplingRate, frequencyBounds) {
         Guard.failIf(frequencyBounds.length != 2 || frequencyBounds.some(v => v < 1 || v > 20000), "Supported frequencies are 30 Hz up to 20 kHz")
         this.samplingRate = samplingRate;
@@ -95,7 +107,7 @@ export class Processing
     }
 
     // TODO: If this starts returning wrong frequency, one possible reason is that the multiples of the lagCandidate returns lower df ... it could be fixed by specifying threshold, or research more.
-    getEstimatedFrequency(audioBuffer, previousPitch, tolerance)
+    getEstimatedFrequency(audioBuffer, previousPitch, tolerance) : FrequencyEstimation
     {
         let minRes = Number.MAX_VALUE;   
         let lagCandidate = this.lagBounds[0];

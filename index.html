@@ -162,7 +162,8 @@
       <canvas id="canvasCmnds" width="1280" height="576" style="border: 3px black;"></canvas>
     </div>
 
-    <script type="module" src="src/Script.js"></script>
+    <!-- importing ts like this will only work with Vite, as it intercepts the request and compiles to js on the fly. -->
+    <script type="module" src="src/App.ts"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YGZNEND9K0"></script>
     <script>

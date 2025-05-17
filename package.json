@@ -4,7 +4,7 @@
   "description": "Guitar tuner written in plain JS with no dependencies.",
   "main": "dist/script.js",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "tsc && vite build",
     "preview": "tsc && vite build && vite preview"
   },
